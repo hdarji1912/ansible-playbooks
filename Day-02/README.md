@@ -2,7 +2,7 @@
 
 ![Ansible](images/Playbookworkflow.jpg)
 
-> Lab Setup: Reused the Day 68 Terraform infrastructure and existing `ansible-practice` files.
+> Lab Setup: Reused the Day 1 Terraform infrastructure and existing `ansible-practice` files.
 
 ```bash
 1. Copy Day 1 Infrastructure
