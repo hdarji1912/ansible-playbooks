@@ -1,6 +1,6 @@
 # Day 1 -- Introduction to Ansible and Inventory Setup
 
-Ansible Architect :
+Ansible Architecture :
 
 ![Ansible](images/ansible.jpg)
 
