@@ -1,4 +1,4 @@
-# Day 68 -- Introduction to Ansible and Inventory Setup
+# Day 1 -- Introduction to Ansible and Inventory Setup
 
 Ansible Architect :
 
@@ -175,8 +175,8 @@ ssh -i ~/.ssh/day1-ansible-key ec2-user@<CONTROL_NODE_IP>
 Configure SSH Key Permissions: 
 
 ```bash
-chmod 400 ~/.ssh/day68-ansible-key
-ls -l ~/.ssh/day68-ansible-key
+chmod 400 ~/.ssh/day1-ansible-key
+ls -l ~/.ssh/day1-ansible-key
 ```
 
 ![Ansible](images/5.jpg)
@@ -186,9 +186,9 @@ ls -l ~/.ssh/day68-ansible-key
 From the Control Node, verify SSH access to all three managed nodes:
 
 ```bash
-ssh -i ~/.ssh/day68-ansible-key ec2-user@<WEB_SERVER_PUBLIC_IP>
-ssh -i ~/.ssh/day68-ansible-key ec2-user@<APP_SERVER_PUBLIC_IP>
-ssh -i ~/.ssh/day68-ansible-key ec2-user@<DB_SERVER_PUBLIC_IP>
+ssh -i ~/.ssh/day1-ansible-key ec2-user@<WEB_SERVER_PUBLIC_IP>
+ssh -i ~/.ssh/day1-ansible-key ec2-user@<APP_SERVER_PUBLIC_IP>
+ssh -i ~/.ssh/day1-ansible-key ec2-user@<DB_SERVER_PUBLIC_IP>
 ```
 SSH connectivity was successfully verified for: `web-server`, `app-server`, `db-server`
 
@@ -261,7 +261,7 @@ ansible_python_interpreter=/usr/bin/python3.9
 ```
 This inventory groups the managed nodes into `web`, `app`, and `db` and defines the SSH user, private key, and Python interpreter.
 
-![Ansible](images/11jpg)
+![Ansible](images/11.jpg)
 
 ### 1. Verify the Inventory Groups
 
@@ -299,7 +299,7 @@ Ansible should return green `SUCCESS` with `"ping": "pong"` for each host.
 You should see green `SUCCESS` with `"ping": "pong"` for each host.
 
 **Troubleshoot:** If ping fails:
-- Check the SSH key path and permissions `(chmod 400 ~/.ssh/day68-ansible-key)`
+- Check the SSH key path and permissions `(chmod 400 ~/.ssh/day1-ansible-key)`
 - Check the security group allows SSH from your IP
 - Check the `ansible_user` matches your AMI (`ec2-user` for Amazon Linux, `ubuntu` for Ubuntu)
 
@@ -355,7 +355,7 @@ Create a file on the control node and copy it to all managed nodes:
 echo "Hello from Ansible" > hello.txt
 ansible all -i inventory.ini -m copy -a "src=hello.txt dest=/tmp/hello.txt"
 ```
-![Ansible](images/18.jpg)
+![Ansible](images/19.jpg)
 
 ### 6. Verify the file was copied
 
@@ -364,7 +364,7 @@ Read the copied file from all managed nodes to verify the content:
 ```bash
 ansible all -i inventory.ini -m command -a "cat /tmp/hello.txt"
 ``` 
-![Ansible](images/19.jpg)
+![Ansible](images/20.png)
 
 **Document:** What does `--become` do? When do you need it?
 
@@ -389,7 +389,7 @@ db
 ```
 This creates higher-level groups so `application` contains the `web` and `app` groups, while `all_servers` contains `application` and `db`.
 
-![Ansible](images/20.jpg)
+![Ansible](images/21.jpg)
 
 ### 2. Run commands against different groups
 
@@ -402,7 +402,7 @@ ansible all_servers -i inventory.ini -m ping      # everything
 ```
 The `application` group targets the web and app servers, `db` targets only the DB server, and `all_servers` targets all managed nodes.
 
-![Ansible](images/21.jpg)
+![Ansible](images/22.jpg)
 
 ### 3. Use patterns
 
@@ -414,7 +414,7 @@ ansible 'all:!db' -i inventory.ini -m ping        # NOT: all except db
 ```
 The `web:app` pattern targets the web or app groups, while `all:!db` targets all hosts except the DB server.
 
-![Ansible](images/22.jpg)
+![Ansible](images/23.jpg)
 
 ### 4. Create an ansible.cfg
 
@@ -429,7 +429,7 @@ private_key_file = ~/your-key.pem
 ```
 This configuration tells Ansible which inventory and SSH settings to use by default.
 
-![Ansible](images/23.jpg)
+![Ansible](images/24.jpg)
 
 Now you can simply run:
 
@@ -438,7 +438,7 @@ ansible all -m ping
 ``` 
 This verifies that Ansible automatically uses the `inventory.ini` specified in `ansible.cfg`.
 
-![Ansible](images/24.jpg)
+![Ansible](images/25.jpg)
 
 **Verify:** Does `ansible all -m ping` work without specifying the inventory file?
 
@@ -446,7 +446,7 @@ This verifies that Ansible automatically uses the `inventory.ini` specified in `
 
 ### 5. Destroy Terraform resources
 
-After completing the Ansible tasks, Exit the Control Node: `exit`, return to the Terraform directory: `cd ~/day68-ansible-lab/terraform`
+After completing the Ansible tasks, Exit the Control Node: `exit`, return to the Terraform directory: `cd ~/day1-ansible-lab/terraform`
 
 Check Terraform State : `terraform state list`
 
@@ -467,7 +467,7 @@ Run : `terraform destroy`
 
 This removes the EC2 instances and other AWS resources created for the lab.
 
-![Ansible](images/25.jpg)
+![Ansible](images/26.jpg)
 
 ---
 
@@ -478,3 +478,18 @@ This removes the EC2 instances and other AWS resources created for the lab.
 - `-m` specifies the module, while `-a` specifies the module arguments.
 - The `command` module runs simple commands, while the `shell` module supports pipes and redirects.
 - Ad-hoc commands are great for quick tasks, but playbooks are better for anything repeatable.
+
+
+---
+
+## 👨‍💻 Author
+
+Hardik Darji
+
+> DevOps Engineer
+
+---
+
+## ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
